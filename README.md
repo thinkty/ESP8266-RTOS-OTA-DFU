@@ -16,6 +16,8 @@ Example:
     |----project/
 ```
 
+For the description on the project structure, check the [document](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/api-guides/build-system.html#example-project).
+
 ## Usage
 
 All build commands must be called at the root project directory (`project/`).
@@ -23,6 +25,9 @@ Run `make menuconfig` to configure the project with the `sdkconfig` file, and ma
 
 The default serial port for your ESP8266 board can be set through `Serial flasher config > Default serial port`.
 Depending on the OS, on Windows, the port will have names like `COM1`. On Linux, it will be like `/dev/ttyUSB#` or `/dev/ttyACM#`.
+
+If an error message such as `Permission denied: '/dev/ttyACM1'` appears, run `sudo usermod -a -G dialout $USER` to add the current user to the group which has permissions or run `sudo chmod -R 777 /dev/ttyUSB0` to change the device to be accessible by all users, groups, etc.
+
 
 ### Compile and flash
 
