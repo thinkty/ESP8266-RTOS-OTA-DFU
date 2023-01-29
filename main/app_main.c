@@ -1,7 +1,4 @@
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
 #include "esp_event.h"
 #include "nvs_flash.h"
 #include "lwip/err.h"
@@ -9,6 +6,7 @@
 
 #include "app_ap.h"
 #include "app_http.h"
+#include "app_tasks.h"
 
 void app_main()
 {
@@ -22,4 +20,14 @@ void app_main()
 
     // Initialize HTTP server for the webpage to upload updates
     init_http();
+
+    // Interval (in milliseconds) to read/print sensor values.
+    th_task_args th_args = {
+        .interval = 10000,
+        .pin = CONFIG_APP_AM2302_GPIO
+    };
+
+    // Initialize and run the temperature/humidity sensor task with priority 10
+    ESP_ERROR_CHECK(init_th(th_args.pin));
+    xTaskCreate(th_task, "th task", DEFAULT_THREAD_STACKSIZE, &th_args, 10, NULL);
 }
