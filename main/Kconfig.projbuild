@@ -17,4 +17,10 @@ menu "Example Configuration"
         default 4
         help
             Max number of the STA connects to AP.
+
+    config APP_AM2302_GPIO
+        int "GPIO pin for the temperature/humidity sensor AM2302"
+        default 4
+        help
+            GPIO pin for the temperature/humidity sensor AM2302.
 endmenu

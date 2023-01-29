@@ -49,7 +49,8 @@
             ],
             "defines": [
                 "__ESP_FILE__",
-                "CONFIG_ESP_MAX_STA_CONN"
+                "CONFIG_ESP_MAX_STA_CONN",
+                "APP_AM2302_GPIO"
             ],
             "cStandard": "c17",
             "cppStandard": "c++14",
