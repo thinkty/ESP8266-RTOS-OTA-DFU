@@ -15,6 +15,7 @@
 // DHT timer precision in microseconds
 #define DHT_TIMER_INTERVAL (2)
 #define DHT_DATA_BITS      (40)
+#define BUILTIN_LED_GPIO   (GPIO_NUM_16)
 
 /**
  * @see https://github.com/Fonger/ESP8266-RTOS-DHT
@@ -31,8 +32,7 @@
 typedef struct {
     uint16_t interval;
     uint8_t pin;
-} th_task_args;
-
+} task_args;
 
 /**
  * @brief Convert raw GPIO data to meaningful value by packing two data byptes
@@ -85,5 +85,22 @@ void th_task(void * arg);
  * @return ESP_OK on success, and ESP_FAIL on failure.
  */
 esp_err_t init_th(uint8_t pin);
+
+/**
+ * @brief Read from the light sensor and toggle the builtin LED based on value.
+ * 
+ * @param arg Points to the interval for fetching and GPIO pin number.
+ */
+void ll_task(void * arg);
+
+/**
+ * @brief Initialize the GPIO for light sensor (SZH-SSBH-011) and the built-in
+ * LED for the NodeMCU board.
+ * 
+ * @param pin GPIO data pin number for the sensor.
+ * 
+ * @return ESP_OK on success, and ESP_FAIL on failure.
+ */
+esp_err_t init_ll(uint8_t pin);
 
 #endif

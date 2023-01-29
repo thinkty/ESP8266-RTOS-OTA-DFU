@@ -22,12 +22,21 @@ void app_main()
     init_http();
 
     // Interval (in milliseconds) to read/print sensor values.
-    th_task_args th_args = {
+    task_args th_args = {
         .interval = 10000,
         .pin = CONFIG_APP_AM2302_GPIO
     };
 
-    // Initialize and run the temperature/humidity sensor task with priority 10
+    // Initialize and run the temperature/humidity sensor task
     ESP_ERROR_CHECK(init_th(th_args.pin));
-    xTaskCreate(th_task, "th task", DEFAULT_THREAD_STACKSIZE, &th_args, 10, NULL);
+    xTaskCreate(th_task, "th task", DEFAULT_THREAD_STACKSIZE, &th_args, DEFAULT_THREAD_PRIO, NULL);
+
+    task_args ll_args = {
+        .interval = 10000,
+        .pin = CONFIG_APP_CDS_GPIO
+    };
+
+    // Initialize and run the light sensor task
+    ESP_ERROR_CHECK(init_ll(ll_args.pin));
+    xTaskCreate(ll_task, "ll task", DEFAULT_THREAD_STACKSIZE, &ll_args, DEFAULT_THREAD_PRIO, NULL);
 }
