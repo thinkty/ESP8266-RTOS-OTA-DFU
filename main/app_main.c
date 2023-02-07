@@ -7,6 +7,7 @@
 #include "app_ap.h"
 #include "app_http.h"
 #include "app_tasks.h"
+#include "esp_ota_ops.h"
 
 void app_main()
 {
@@ -39,4 +40,17 @@ void app_main()
     // Initialize and run the light sensor task
     ESP_ERROR_CHECK(init_ll(ll_args.pin));
     xTaskCreate(ll_task, "ll task", DEFAULT_THREAD_STACKSIZE, &ll_args, DEFAULT_THREAD_PRIO, NULL);
+
+    // Check which OTA partition is running
+
+    const esp_partition_t * configured = esp_ota_get_boot_partition();
+    const esp_partition_t * running = esp_ota_get_running_partition();
+    const esp_partition_t * updating = esp_ota_get_next_update_partition(NULL);
+    if (updating == NULL) {
+        ESP_LOGE(TAG, "Unable to find OTA update partition...");
+    }
+    if (configured != running) {
+        ESP_LOGW(TAG, "Configured OTA boot partition at offset 0x%08x, but running from offset 0x%08x", configured->address, running->address);
+    }
+    ESP_LOGI(TAG, "Running OTA boot partition at offset 0x%08x, will update partition at offset 0x%08x", running->address, updating->address);
 }
