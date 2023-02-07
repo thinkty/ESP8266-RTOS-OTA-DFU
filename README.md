@@ -35,6 +35,7 @@ If an error message such as `Permission denied: '/dev/ttyACM1'` appears, run `su
 | `make flash ESPPORT= <port>` |                                                       Override the port specified in the sdkconfig file and flash                                                       |
 | `make monitor`               |                                                              Open the serial monitor for your ESP8266 board                                                             |
 | `make flash monitor`         |                                                               Compile, flash, and open monitor all-in-one                                                               |
+| `make partition_table`       |                                                              Print the current partition table of the device                                                              |
 | `make help`                  | For additional information about the toolchain or visit the [README](https://github.com/espressif/ESP8266_RTOS_SDK#compiling-the-project)                               |
 
 
