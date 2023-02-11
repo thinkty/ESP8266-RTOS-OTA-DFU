@@ -154,7 +154,7 @@ void ll_task(void * arg)
         val = gpio_get_level(args.pin);
         taskEXIT_CRITICAL();
 
-        ESP_LOGI(TAG, "LL_TASK : %s", val == 1 ? "Bright" : "Dark");
+        ESP_LOGI(TAG, "LL_TASK : %s", val == 1 ? "Dark" : "Bright");
         
         // Turn on LED if dark and off if bright
         gpio_set_level(BUILTIN_LED_GPIO, val == 1 ? 0 : 1);
