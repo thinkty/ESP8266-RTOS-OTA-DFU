@@ -30,6 +30,8 @@ static const char * FAIL_PAGE =
 "<h1>Failed</h1>"
 "</body></html>";
 
+extern esp_ota_firm_t ota_firm;
+
 esp_err_t get_handler(httpd_req_t * req)
 {
     httpd_resp_send(req, INDEX_PAGE, strlen(INDEX_PAGE));
@@ -49,12 +51,10 @@ esp_err_t post_handler(httpd_req_t * req)
         return ESP_OK;
     }
 
-    // Read binary image and simply print for now
-    char buf[16];
+    char buf[100];
     size_t ret = 0, remaining = req->content_len;
-    printf("=========== RECEIVED DATA ==========\n");
     while (remaining > 0) {
-        /* Read the data for the request */
+        // Read data from request
         ret = httpd_req_recv(req, buf, remaining < sizeof(buf) ? remaining : sizeof(buf));
 
         // Retry receiving if timeout occurred
@@ -64,16 +64,29 @@ esp_err_t post_handler(httpd_req_t * req)
             return ESP_FAIL;
         }
 
-        remaining -= ret;
-        for (uint8_t i = 0; i < ret; i++) {
-            printf("%02X ", (unsigned char) buf[i]);
+        // Write read bytes into the OTA partition
+        if (write_ota(&ota_firm, buf, ret) != ESP_OK) {
+            return ESP_FAIL;
         }
-        printf("\n");
+
+        remaining -= ret;
     }
-    printf("====================================\n");
 
     httpd_resp_set_status(req, "200 OK");
     httpd_resp_send(req, SUCCESS_PAGE, strlen(SUCCESS_PAGE));
+
+    // End ota_firm and restart
+    if (end_ota(&ota_firm) != ESP_OK) {
+        ESP_LOGE(TAG, "Error: end_ota");
+        return ESP_FAIL;
+    }
+    ESP_LOGI(TAG, "Prepare to restart system in 3!");
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    ESP_LOGI(TAG, "Prepare to restart system in 2!");
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    ESP_LOGI(TAG, "Prepare to restart system in 1!");
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    esp_restart();
 
     return ESP_OK;
 }

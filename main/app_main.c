@@ -9,6 +9,8 @@
 #include "app_tasks.h"
 #include "app_ota.h"
 
+esp_ota_firm_t ota_firm;
+
 void app_main()
 {
     ESP_ERROR_CHECK(nvs_flash_init());
@@ -20,10 +22,8 @@ void app_main()
     init_ap();
 
     // Initialize OTA-update
-    esp_ota_firm_t ota_firm;
     ESP_ERROR_CHECK(init_ota(&ota_firm));
 
-    // TODO: pass in ota_firm to http task
     // Initialize HTTP server for the webpage to upload updates
     init_http();
 

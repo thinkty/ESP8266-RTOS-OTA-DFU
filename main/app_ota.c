@@ -5,7 +5,6 @@
 esp_err_t init_ota(esp_ota_firm_t * ota_firm)
 {
     // Initialize ota_firm struct
-    memset(ota_firm, 0, sizeof(esp_ota_firm_t));
     ota_firm->ota_size = 0;
     ota_firm->updating = esp_ota_get_next_update_partition(NULL);
     if (ota_firm->updating == NULL) {

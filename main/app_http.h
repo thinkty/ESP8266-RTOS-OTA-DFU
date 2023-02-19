@@ -4,6 +4,7 @@
 
 #include "esp_log.h"
 #include "esp_http_server.h"
+#include "app_ota.h"
 
 #ifndef TAG
 #define TAG "APP"
