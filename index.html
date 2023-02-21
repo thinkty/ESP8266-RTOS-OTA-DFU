@@ -32,16 +32,35 @@
             cursor: pointer;
             font-size: large;
         }
+        #btn-restart {
+            display: none;
+        }
     </style>
     <script>
         function submit() {
             var file = document.getElementById('input-file').files[0];
             var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                document.getElementById('upload-response').innerHTML = xhr.responseText;
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('btn-restart').style.display = 'block';
+                }
+            };
             xhr.open('POST', '/');
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('X-File-Name', file.name);
             xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
             xhr.send(file);
+        }
+        function restart() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    window.location.reload();
+                }
+            };
+            xhr.open('PUT', '/');
+            xhr.send();
         }
     </script>
 </head>
@@ -62,5 +81,7 @@
     </h3>
     <input id='input-file' type='file' accept='' />
     <button onclick='submit();'>Upload</button>
+    <p id='upload-response'></p>
+    <button id='btn-restart' onclick='restart()'>Restart</button>
 </body>
 </html>
